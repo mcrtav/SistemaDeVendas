@@ -30,7 +30,7 @@ py -m pip install django pillow
 django-admin startproject lojaproject .
 
 # criar aplicativo
-django-admin startproject lojaapp
+django-admin startapp lojaapp
 
 # fazer a migração
 python manage.py migrate
@@ -42,7 +42,7 @@ Email: admin@admin.com
 password: admin123
 Password (again): admin123
 
-# github
+# github # github # github # github # github # github # github # github # github # github # github # github
 echo "# SistemaDeVendas" >> README.md
 git init
 git add README.md
@@ -52,3 +52,11 @@ git remote add origin https://github.com/mcrtav/SistemaDeVendas.git
 git push -u origin main
 # remover remote
 git remote remove origin
+
+# no setting.py colocar NO TEMPLATES:
+tEMPLATES  -> 'DIRS': [BASE_DIR / 'templates'],
+# Criar no final da setting.py
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "static_cdn"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
