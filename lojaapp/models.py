@@ -23,7 +23,7 @@ class Categoria(models.Model):
 class Produto(models.Model):
     titulo = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
-    Categorias = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    categorias = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="produtos")
     preco_mercado = models.PositiveIntegerField()
     venda = models.PositiveIntegerField()
@@ -47,7 +47,7 @@ class Carro(models.Model):
 
 class CarroProduto(models.Model):
     carro = models.ForeignKey(Carro, on_delete=models.CASCADE)
-    Produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     avaliacao = models.PositiveIntegerField()
     quantidade = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()

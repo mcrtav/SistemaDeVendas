@@ -34,21 +34,54 @@ class ProdutoDetalheView(TemplateView):
         return context
 
 
-
 class AddCarroView(TemplateView):
     template_name = "addprocarro.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        produto_id = self.kwargs['pro_id']
+        produto_id = self.kwargs["pro_id"]
         produto_obj = Produto.objects.get(id=produto_id)
         carro_id = self.request.session.get("carro_id", None)
         if carro_id:
             carro_obj = Carro.objects.get(id=carro_id)
+            produto_no_carro = carro_obj.carroproduto_set.filter(produto=produto_obj)
+
+            if produto_no_carro.exists():
+                carroproduto = produto_no_carro.last()
+                carroproduto.quantidade += 1
+                carroproduto.subtotal += produto_obj.venda
+                carroproduto.save()
+                carro_obj.total += produto_obj.venda
+                carro_obj.save()
+            else:
+                carroproduto = CarroProduto.objects.create(
+                    carro=carro_obj,
+                    produto=produto_obj,
+                    avaliacao=produto_obj.venda,
+                    quantidade=1,
+                    subtotal=produto_obj.venda,
+                )
+                carro_obj.total += produto_obj.venda
+                carro_obj.save()
+
         else:
             carro_obj = Carro.objects.create(total=0)
-            self.request.session['carro_id']= carro_obj.id
-            
+            self.request.session["carro_id"] = carro_obj.id
+            carroproduto = CarroProduto.objects.create(
+                carro=carro_obj,
+                produto=produto_obj,
+                avaliacao=produto_obj.venda,
+                quantidade=1,
+                subtotal=produto_obj.venda,
+            )
+            carro_obj.total += produto_obj.venda
+            carro_obj.save()
+        return context
+
+
+class MeuCarroView(TemplateView):
+    template_name = "meucarro.html"
+
 
 class SobreView(TemplateView):
     template_name = "sobre.html"
